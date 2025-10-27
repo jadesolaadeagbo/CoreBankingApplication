@@ -1,0 +1,51 @@
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.metagen
+*.tlb
+*.lib
+*.winmd
+*.appx
+*.appxbundle
+*.pri
+*.sgen
+*.cache
+*.exp
+*.obj
+*.res
+*.resources
+*.log
+*.bak
+*.ncb
+*.aps
+*.bsc
+*.sbr
+*.pch
+*.idb
+*.opt
+*.aps
+
+# NuGet packages
+packages/
+*.nupkg
+
+# Resharper files
+*.resharper
+*.resharper.user
+
+# Other temporary files
+*.tmp
+*.temp
