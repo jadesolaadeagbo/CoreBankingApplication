@@ -1,4 +1,5 @@
 ﻿using CoreBanking.Core.Entities;
+using CoreBanking.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace CoreBanking.Core.Interfaces
 {
     public interface ICustomerRepository
     {
-        Task<Customer> GetByIdAsync(Guid customerId);
+        Task<Customer> GetByIdAsync(CustomerId customerId);
         Task<IEnumerable<Customer>> GetAllAsync();
         Task AddAsync(Customer customer);
         Task UpdateAsync(Customer customer);
-        Task<bool> ExistsAsync(Guid customerId);
+        Task<bool> ExistsAsync(CustomerId customerId);
     }
 }

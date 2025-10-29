@@ -10,18 +10,22 @@ namespace CoreBanking.Core.Entities
 {
     public class Transaction
     {
-        public Guid TransactionId { get; private set; }
-        public Guid AccountId { get; private set; }
+        public TransactionId TransactionId { get; private set; }
+        public AccountId AccountId { get; private set; }
+        public Account Account { get; private set; }
         public TransactionType Type { get; private set; }
         public Money Amount { get; private set; }
         public string Description { get; private set; }
         public DateTime Timestamp { get; private set; }
         public string Reference { get; private set; }
 
-        public Transaction() { }
-        public Transaction(Guid accountId, TransactionType type, Money amount, string description = "")
+        public Transaction(AccountId accountId)
         {
-            TransactionId = Guid.NewGuid();
+            AccountId = accountId;
+        }
+        public Transaction(AccountId accountId, TransactionType type, Money amount, string description = "")
+        {
+            TransactionId = TransactionId.Create();
             AccountId = accountId;
             Type = type;
             Amount = amount;
