@@ -18,9 +18,9 @@ namespace CoreBanking.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAccounts()
+        public async Task<IActionResult> GetAllAccounts()
         {
-            var accounts = _accountRepository.GetAllAsync();
+            var accounts = await _accountRepository.GetAllAsync();
             return Ok(accounts);
         }
 

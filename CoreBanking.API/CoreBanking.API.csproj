@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CoreBanking.Core\CoreBanking.Core.csproj" />
-    <ProjectReference Include="..\CoreBanking.DAL\CoreBanking.Infrastructure.csproj" />
+    <ProjectReference Include="..\CoreBanking.DataAccessLayer\CoreBanking.DataAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>

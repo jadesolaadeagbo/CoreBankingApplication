@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.Core", "CoreBan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.Application", "CoreBanking.App\CoreBanking.Application.csproj", "{F458047C-B9D3-4EB7-8D2B-5109D8292618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.Infrastructure", "CoreBanking.DAL\CoreBanking.Infrastructure.csproj", "{4BDE9AA4-A40F-440F-BB6F-036A2E34E683}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.DataAccessLayer", "CoreBanking.DataAccessLayer\CoreBanking.DataAccessLayer.csproj", "{022BE667-0CF0-45F4-ABA2-853FC22603E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{F458047C-B9D3-4EB7-8D2B-5109D8292618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F458047C-B9D3-4EB7-8D2B-5109D8292618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F458047C-B9D3-4EB7-8D2B-5109D8292618}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BDE9AA4-A40F-440F-BB6F-036A2E34E683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BDE9AA4-A40F-440F-BB6F-036A2E34E683}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BDE9AA4-A40F-440F-BB6F-036A2E34E683}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BDE9AA4-A40F-440F-BB6F-036A2E34E683}.Release|Any CPU.Build.0 = Release|Any CPU
+		{022BE667-0CF0-45F4-ABA2-853FC22603E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{022BE667-0CF0-45F4-ABA2-853FC22603E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{022BE667-0CF0-45F4-ABA2-853FC22603E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{022BE667-0CF0-45F4-ABA2-853FC22603E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

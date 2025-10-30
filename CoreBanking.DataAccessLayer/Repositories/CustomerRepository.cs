@@ -1,7 +1,7 @@
 ﻿using CoreBanking.Core.Entities;
 using CoreBanking.Core.Interfaces;
 using CoreBanking.Core.ValueObjects;
-using CoreBanking.Infrastructure.Data;
+using CoreBanking.DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreBanking.Infrastructure.Repositories
+namespace CoreBanking.DataAccessLayer.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
@@ -20,15 +20,18 @@ namespace CoreBanking.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Customer> GetByIdAsync(CustomerId customerId)
+        public async Task<Customer?> GetByIdAsync(CustomerId customerId)
         {
-            return await _context.Customers.Include(c=> c.Accounts)
-                                           .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+            return await _context.Customers
+                .Include(c => c.Accounts)
+                .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
 
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            return await _context.Customers.Include(c => c.Accounts).ToListAsync();
+            return await _context.Customers
+                .Include(c => c.Accounts)
+                .ToListAsync();
         }
 
         public async Task AddAsync(Customer customer)
@@ -39,11 +42,15 @@ namespace CoreBanking.Infrastructure.Repositories
         public async Task UpdateAsync(Customer customer)
         {
             _context.Customers.Update(customer);
+            await Task.CompletedTask;
         }
+
         public async Task<bool> ExistsAsync(CustomerId customerId)
         {
-            return await _context.Customers.AnyAsync(c => c.CustomerId == customerId);
+            return await _context.Customers
+                .AnyAsync(c => c.CustomerId == customerId);
         }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

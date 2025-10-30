@@ -1,6 +1,6 @@
 using CoreBanking.Core.Interfaces;
-using CoreBanking.Infrastructure.Data;
-using CoreBanking.Infrastructure.Repositories;
+using CoreBanking.DataAccessLayer.Data;
+using CoreBanking.DataAccessLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
