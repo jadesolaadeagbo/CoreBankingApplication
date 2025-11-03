@@ -11,6 +11,8 @@ namespace CoreBanking.Core.Enums
         Deposit = 1,
         Withdrawal = 2,
         Transfer = 3,
-        Interest = 4
+        Interest = 4,
+        TransferOut = 5,
+        TransferIn = 6
     }
 }

@@ -16,6 +16,8 @@
         public static CustomerId Create(Guid value) => new(value);
 
         public override string ToString() => Value.ToString();
+
+    
     }
 
 }

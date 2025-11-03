@@ -27,6 +27,12 @@ namespace CoreBanking.DataAccessLayer.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("AccountNumber");
+
                     b.Property<string>("AccountType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -65,9 +71,10 @@ namespace CoreBanking.DataAccessLayer.Migrations
                         new
                         {
                             AccountId = new Guid("c3d4e5f6-3456-7890-cde1-345678901cde"),
+                            AccountNumber = "1000000001",
                             AccountType = "Checking",
                             CustomerId = new Guid("a1b2c3d4-1234-5678-9abc-123456789abc"),
-                            DateOpened = new DateTime(2025, 10, 10, 9, 34, 2, 636, DateTimeKind.Utc).AddTicks(8879),
+                            DateOpened = new DateTime(2025, 10, 14, 9, 23, 11, 749, DateTimeKind.Utc).AddTicks(1326),
                             IsActive = true,
                             IsDeleted = false
                         });
@@ -121,7 +128,7 @@ namespace CoreBanking.DataAccessLayer.Migrations
                         new
                         {
                             CustomerId = new Guid("a1b2c3d4-1234-5678-9abc-123456789abc"),
-                            DateCreated = new DateTime(2025, 9, 30, 9, 34, 2, 636, DateTimeKind.Utc).AddTicks(8801),
+                            DateCreated = new DateTime(2025, 10, 4, 9, 23, 11, 749, DateTimeKind.Utc).AddTicks(1029),
                             Email = "alice.johnson@email.com",
                             FirstName = "Alice",
                             IsActive = true,
@@ -139,10 +146,19 @@ namespace CoreBanking.DataAccessLayer.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Reference")
                         .IsRequired()
@@ -204,35 +220,6 @@ namespace CoreBanking.DataAccessLayer.Migrations
                                     Currency = "NGN"
                                 });
                         });
-
-                    b.OwnsOne("CoreBanking.Core.ValueObjects.AccountNumber", "AccountNumber", b1 =>
-                        {
-                            b1.Property<Guid>("AccountId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(10)
-                                .HasColumnType("nvarchar(10)")
-                                .HasColumnName("AccountNumber");
-
-                            b1.HasKey("AccountId");
-
-                            b1.ToTable("Accounts");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AccountId");
-
-                            b1.HasData(
-                                new
-                                {
-                                    AccountId = new Guid("c3d4e5f6-3456-7890-cde1-345678901cde"),
-                                    Value = "1000000001"
-                                });
-                        });
-
-                    b.Navigation("AccountNumber")
-                        .IsRequired();
 
                     b.Navigation("Balance")
                         .IsRequired();

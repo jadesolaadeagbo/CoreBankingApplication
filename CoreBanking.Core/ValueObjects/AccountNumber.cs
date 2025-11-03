@@ -15,8 +15,9 @@
             Value = value;
         }
 
-        public static AccountNumber Create(string value) => new(value);
+        private AccountNumber() : this(string.Empty) { }
 
+        public static AccountNumber Create(string value) => new(value);
         public static implicit operator string(AccountNumber number) => number.Value;
         public static explicit operator AccountNumber(string value) => new(value);
 
