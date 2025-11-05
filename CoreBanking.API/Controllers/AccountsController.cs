@@ -36,7 +36,7 @@ namespace CoreBanking.API.Controllers
         /// <response code="200">Returns the account details</response>
         /// <response code="404">Account not found</response>
         /// <response code="400">Invalid account number format</response>
-        
+
         [HttpGet("{accountNumber}")]
         [ProducesResponseType(typeof(ApiResponse<AccountDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]

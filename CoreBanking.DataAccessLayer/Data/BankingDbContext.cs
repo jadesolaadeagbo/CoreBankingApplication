@@ -18,13 +18,16 @@ namespace CoreBanking.DataAccessLayer.Data
         public DbSet<Account> Accounts => Set<Account>();
         public DbSet<Transaction> Transactions => Set<Transaction>();
         public DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
-
+        public DbSet<DomainEvent> DomainEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Ignore<DomainEvent>();
+            modelBuilder.Ignore<IDomainEvent>();
 
             // Customer configuration
             modelBuilder.Entity<Customer>(entity =>
