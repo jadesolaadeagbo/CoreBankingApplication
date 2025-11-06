@@ -24,6 +24,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,17 +35,24 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Protobuf Include="gRPC\Protos\account.proto" GrpcServices="Server" />
-		<Protobuf Include="gRPC\Protos\common.proto" GrpcServices="Server" />
-	</ItemGroup>
+    <ItemGroup>
+        <Protobuf Include="gRPC\Protos\account.proto" GrpcServices="Server" />
+        <Protobuf Include="gRPC\Protos\common.proto" GrpcServices="Server" />
+        <Protobuf Include="gRPC\Protos\enhanced_account.proto" GrpcServices="Server" />
+    </ItemGroup>		
 
 
 	<ItemGroup>
     <ProjectReference Include="..\CoreBanking.App\CoreBanking.Application.csproj" />
     <ProjectReference Include="..\CoreBanking.Core\CoreBanking.Core.csproj" />
     <ProjectReference Include="..\CoreBanking.DataAccessLayer\CoreBanking.DataAccessLayer.csproj" />
-  </ItemGroup>
+  </ItemGroup>		
+
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
+	
 
 	
 </Project>

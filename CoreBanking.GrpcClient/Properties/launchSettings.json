@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CoreBanking.GrpcClient": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
