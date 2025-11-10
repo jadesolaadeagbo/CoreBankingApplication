@@ -139,6 +139,9 @@ namespace CoreBanking.DataAccessLayer.Data
                 LastName = "Johnson",
                 Email = "alice.johnson@email.com",
                 PhoneNumber = "555-0101",
+                BVN="20000000009",
+                CreditScore = 40,
+                DateOfBirth= DateTime.UtcNow.AddYears(-30),
                 DateCreated = DateTime.UtcNow.AddDays(-30),
                 IsActive = true,
                 IsDeleted = false
@@ -168,10 +171,6 @@ namespace CoreBanking.DataAccessLayer.Data
                     Currency = "NGN"
                 }
             );
-
-
-
-
         }
 
         public async Task SaveChangesWithOutboxAsync(CancellationToken cancellationToken = default)

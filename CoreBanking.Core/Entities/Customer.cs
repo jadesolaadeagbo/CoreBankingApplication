@@ -14,6 +14,9 @@ namespace CoreBanking.Core.Entities
         public bool IsDeleted { get; private set; }
         public DateTime? DeletedAt { get; private set; }
         public string? DeletedBy { get; private set; }
+        public string BVN { get; private set; }
+        public int CreditScore { get; private set; }
+        public DateTime DateOfBirth { get; private set; }
 
         // Navigation property for accounts
         private readonly List<Account> _accounts = new();
@@ -21,7 +24,7 @@ namespace CoreBanking.Core.Entities
 
         private Customer() { } // EF Core needs this
 
-        public Customer(string firstName, string lastName, string email, string phoneNumber)
+        public Customer(string firstName, string lastName, string email, string phoneNumber, DateTime dateOfBirth, string bVN, int creditScore)
         {
             CustomerId = CustomerId.Create();
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
@@ -30,8 +33,10 @@ namespace CoreBanking.Core.Entities
             PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
             DateCreated = DateTime.UtcNow;
             IsActive = true;
+            BVN = bVN;
+            CreditScore = creditScore;
+            DateOfBirth = dateOfBirth;
         }
-
         // Business methods
         public void UpdateContactInfo(string email, string phoneNumber)
         {

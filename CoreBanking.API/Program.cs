@@ -1,16 +1,21 @@
+using CoreBanking.API.Extensions;
 using CoreBanking.API.gRPC.Services;
 using CoreBanking.API.Hubs;
 using CoreBanking.API.Hubs.EventHandlers;
+using CoreBanking.API.Hubs.Management;
 using CoreBanking.API.Middleware;
+using CoreBanking.API.Services;
 using CoreBanking.App.Common.Mappings;
 using CoreBanking.Application.Accounts.Commands.CreateAccount;
 using CoreBanking.Application.Accounts.EventHandlers;
 using CoreBanking.Application.Common.Behaviours;
 using CoreBanking.Application.Common.Interfaces;
 using CoreBanking.Application.Common.Mappings;
+using CoreBanking.Application.External.Interfaces;
 using CoreBanking.Core.Events;
 using CoreBanking.Core.Interfaces;
 using CoreBanking.DataAccessLayer.Data;
+using CoreBanking.DataAccessLayer.External.Resilience;
 using CoreBanking.DataAccessLayer.Repositories;
 using CoreBanking.DataAccessLayer.Services;
 using CoreBanking.Infrastructure.Data;
@@ -19,6 +24,8 @@ using MediatR;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace CoreBanking.API
 {
@@ -39,6 +46,12 @@ namespace CoreBanking.API
             builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+            builder.Services.AddHttpClient<ICreditScoringServiceClient, ICreditScoringServiceClient>(
+                client =>
+                {
+                    client.BaseAddress = new Uri(builder.Configuration["CreditScoringApi:BaseUrl"] ?? "http://api.example.com");
+                    client.DefaultRequestHeaders.Add("accept", "application/json");
+                });
 
             // Event handlers
             builder.Services.AddTransient<INotificationHandler<AccountCreatedEvent>, AccountCreatedEventHandler>();
@@ -59,8 +72,41 @@ namespace CoreBanking.API
             builder.Services.AddGrpcReflection();
 
             // SignalR
-            builder.Services.AddSignalR();
+            // Add SignalR services
+            builder.Services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = builder.Environment.IsDevelopment();
+                options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+                options.MaximumReceiveMessageSize = 64 * 1024; // 64KB
+            })
+            .AddMessagePackProtocol();
 
+            // Add connection state management
+            builder.Services.AddSingleton<ConnectionStateService>();
+
+            // Add hosted services
+            builder.Services.AddHostedService<TransactionBroadcastService>();
+
+            // Add external HTTP clients with resilience
+            builder.Services.AddExternalHttpClients(builder.Configuration);
+
+            // Add resilience services
+            builder.Services.AddSingleton<IResilientHttpClientService, ResilientHttpClientService>();
+
+            // Register Polly policies
+            builder.Services.AddSingleton(HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => !msg.IsSuccessStatusCode)
+                .WaitAndRetryAsync(
+                    retryCount: 3,
+                    sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                    onRetry: (outcome, timespan, retryCount, context) =>
+                    {
+                        var logger = CoreBanking.DataAccessLayer.External.Resilience.ContextExtensions.GetLogger(context);
+                        logger?.LogWarning("Retry {RetryCount} after {Delay}ms",
+                            retryCount, timespan.TotalMilliseconds);
+                    }));
             // MediatR setup
             builder.Services.AddMediatR(cfg =>
             {
@@ -140,9 +186,8 @@ namespace CoreBanking.API
             app.MapGrpcService<EnhancedAccountGrpcService>();
 
             // SignalR hub
-            app.MapHub<EnhancedNotificationHub>("/hubs/enhanced-notifications");
-            app.MapHub<NotificationHub>("/hubs/notifications");
-            app.MapHub<TransactionHub>("/hubs/transactions");
+            app.MapHub<EnhancedNotificationHub>("/hubs/notifications");
+            app.MapHub<EnhancedTransactionHub>("/hubs/transactions");
 
             // Static file fallback (optional)
             app.MapFallbackToFile("index.html");

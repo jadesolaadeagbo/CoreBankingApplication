@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CoreBanking.Application.External.DTOs
+{
+    public record CSCustomerValidationRequest
+    {
+        public string CustomerId { get; init; } = string.Empty;
+        public string FullName { get; init; } = string.Empty;
+        public DateTime DateOfBirth { get; init; }
+        public string BVN { get; init; } = string.Empty; // BVN, SSN, etc.
+    }
+
+    // CoreBanking.Application/External/DTOs/CSValidationResponse.cs
+    public record CSValidationResponse
+    {
+        public bool IsValid { get; init; }
+        public string Reason { get; init; } = string.Empty;
+    }
+}
