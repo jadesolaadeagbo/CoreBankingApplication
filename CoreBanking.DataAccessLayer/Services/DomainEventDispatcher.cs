@@ -2,15 +2,11 @@
 using CoreBanking.Core.Common;
 using CoreBanking.Core.Interfaces;
 using CoreBanking.DataAccessLayer.Data;
+using CoreBanking.Infrastructure.Data;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CoreBanking.DataAccessLayer.Services
+namespace CoreBanking.Infrastructure.Services
 {
     public class DomainEventDispatcher : IDomainEventDispatcher
     {
@@ -19,25 +15,35 @@ namespace CoreBanking.DataAccessLayer.Services
         private readonly ILogger<DomainEventDispatcher> _logger;
 
         public DomainEventDispatcher(
-            BankingDbContext context,
-            IPublisher publisher,
-            ILogger<DomainEventDispatcher> logger)
+        BankingDbContext context,
+        IPublisher publisher,
+        ILogger<DomainEventDispatcher> logger)
         {
             _context = context;
             _publisher = publisher;
             _logger = logger;
         }
 
+        public Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task DispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
             var domainEntities = _context.ChangeTracker
-                .Entries<IAggregateRoot>()
-                .Where(x => x.Entity.DomainEvents.Any())
-                .ToList();
+            .Entries<IAggregateRoot>()
+            .Where(x => x.Entity.DomainEvents.Any())
+            .ToList();
 
             var domainEvents = domainEntities
-                .SelectMany(x => x.Entity.DomainEvents)
-                .ToList();
+            .SelectMany(x => x.Entity.DomainEvents)
+            .ToList();
 
             foreach (var domainEvent in domainEvents)
             {

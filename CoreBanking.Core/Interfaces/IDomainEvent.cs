@@ -4,4 +4,5 @@ namespace CoreBanking.Core.Common;
 public interface IDomainEvent
 {
     DateTime OccurredOn { get; }
+    string? EventId { get; }
 }

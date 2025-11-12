@@ -11,14 +11,17 @@ using CoreBanking.Application.Accounts.EventHandlers;
 using CoreBanking.Application.Common.Behaviours;
 using CoreBanking.Application.Common.Interfaces;
 using CoreBanking.Application.Common.Mappings;
+using CoreBanking.Application.Common.Models;
 using CoreBanking.Application.External.Interfaces;
 using CoreBanking.Core.Events;
 using CoreBanking.Core.Interfaces;
 using CoreBanking.DataAccessLayer.Data;
 using CoreBanking.DataAccessLayer.External.Resilience;
 using CoreBanking.DataAccessLayer.Repositories;
+using CoreBanking.DataAccessLayer.ServiceBus;
 using CoreBanking.DataAccessLayer.Services;
 using CoreBanking.Infrastructure.Data;
+using CoreBanking.Infrastructure.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -26,6 +29,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Polly;
 using Polly.Extensions.Http;
+using IDomainEventDispatcher = CoreBanking.Application.Common.Interfaces.IDomainEventDispatcher;
 
 namespace CoreBanking.API
 {
@@ -33,12 +37,16 @@ namespace CoreBanking.API
     {
         public static void Main(string[] args)
         {
+            // CoreBanking.API/Program.cs (Additions)
             var builder = WebApplication.CreateBuilder(args);
 
             // ------------------- SERVICES -------------------
 
             builder.Services.AddDbContext<BankingDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add resilience options
+            builder.Services.Configure<ResilienceOptions>(builder.Configuration.GetSection("Resilience"));
 
             // Core dependencies
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -91,6 +99,22 @@ namespace CoreBanking.API
             // Add external HTTP clients with resilience
             builder.Services.AddExternalHttpClients(builder.Configuration);
 
+            // Add advanced Polly policies
+            builder.Services.AddSingleton<AdvancedPollyPolicies>();
+
+            // Add simulated external services
+            builder.Services.AddSingleton<Core.Interfaces.ISimulatedCreditScoringService, SimulatedCreditScoringService>();
+
+            // Add Azure Service Bus (simulated for now - will configure properly in subscequent class)
+            //builder.Services.AddSingleton<IServiceBusSender>(provider =>
+            //{
+            //    var logger = provider.GetRequiredService<ILogger<ServiceBusSender>>();
+            //    // For today, we'll use a mock. Tomorrow we'll add real Azure Service Bus connection
+            //    return new MockServiceBusSender(logger);
+            //});
+
+            builder.Services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>();
+            builder.Services.AddScoped<IDomainEventDispatcher, ServiceBusEventDispatcher>();
             // Add resilience services
             builder.Services.AddSingleton<IResilientHttpClientService, ResilientHttpClientService>();
 
