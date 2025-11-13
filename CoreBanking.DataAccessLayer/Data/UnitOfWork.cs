@@ -1,7 +1,7 @@
 ﻿using CoreBanking.Core.Interfaces;
 using CoreBanking.DataAccessLayer.Data;
 
-namespace CoreBanking.Infrastructure.Data;
+namespace CoreBanking.DataAccessLayer.Data;
 
 public class UnitOfWork : IUnitOfWork
 {

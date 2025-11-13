@@ -139,10 +139,11 @@ namespace CoreBanking.DataAccessLayer.Data
                 LastName = "Johnson",
                 Email = "alice.johnson@email.com",
                 PhoneNumber = "555-0101",
-                BVN="20000000009",
+                BVN = "20000000009",
                 CreditScore = 40,
-                DateOfBirth= DateTime.UtcNow.AddYears(-30),
-                DateCreated = DateTime.UtcNow.AddDays(-30),
+                // Use static, fixed dates instead of DateTime.UtcNow.AddX
+                DateOfBirth = new DateTime(1995, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                DateCreated = new DateTime(2024, 10, 1, 0, 0, 0, DateTimeKind.Utc),
                 IsActive = true,
                 IsDeleted = false
             }

@@ -1,14 +1,10 @@
-﻿using CoreBanking.Core.Interfaces;
+﻿using Azure.Messaging.ServiceBus;
+using CoreBanking.Core.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreBanking.DataAccessLayer.ServiceBus
 {
-    public class MockServiceBusSender : IServiceBusSender
+    public class MockServiceBusSender : IBankingServiceBusSender
     {
         private readonly ILogger<MockServiceBusSender> _logger;
 
@@ -34,17 +30,17 @@ namespace CoreBanking.DataAccessLayer.ServiceBus
             return Task.CompletedTask;
         }
 
-        public Task SendMessageAsync(string queueOrTopicName, string message, Dictionary<string, object> properties, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task SendMessageAsync(string queueOrTopicName, string messageBody, IDictionary<string, object> properties = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         public ValueTask DisposeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SendMessageAsync(string queueOrTopicName, ServiceBusMessage message, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,4 @@
 ﻿using Azure.Messaging.ServiceBus;
-using CoreBanking.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,18 +8,16 @@ using System.Threading.Tasks;
 
 namespace CoreBanking.DataAccessLayer.ServiceBus
 {
-    public class ServiceBusSender : IServiceBusSender, IAsyncDisposable
+    public class BankingServiceBusSender : IBankingServiceBusSender, IAsyncDisposable
     {
         private readonly ServiceBusClient _client;
-        private readonly ILogger<ServiceBusSender> _logger;
-        private readonly Dictionary<string, ServiceBusSender> _senders = new();
+        private readonly ILogger<BankingServiceBusSender> _logger;
 
-        public ServiceBusSender(string connectionString, ILogger<ServiceBusSender> logger)
+        public BankingServiceBusSender(string connectionString, ILogger<BankingServiceBusSender> logger)
         {
             _client = new ServiceBusClient(connectionString);
             _logger = logger;
         }
-
 
         public async Task SendMessageAsync(string queueOrTopicName, string message, CancellationToken cancellationToken = default)
         {
@@ -48,7 +45,6 @@ namespace CoreBanking.DataAccessLayer.ServiceBus
             _logger.LogDebug("Binary message sent to {Destination}", queueOrTopicName);
         }
 
-
         public async Task ScheduleMessageAsync(string queueOrTopicName, string message, DateTimeOffset scheduledEnqueueTime, CancellationToken cancellationToken = default)
         {
             await using var sender = _client.CreateSender(queueOrTopicName);
@@ -58,24 +54,23 @@ namespace CoreBanking.DataAccessLayer.ServiceBus
             _logger.LogInformation("Message scheduled for {ScheduledTime}", scheduledEnqueueTime);
         }
 
-
         public async ValueTask DisposeAsync()
         {
-            foreach (var sender in _senders.Values)
-            {
-                await sender.DisposeAsync();
-            }
             await _client.DisposeAsync();
-        }
-
-        public Task SendMessageAsync(string queueOrTopicName, string message, Dictionary<string, object> properties, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
         }
 
         public Task SendMessageAsync(string queueOrTopicName, string messageBody, IDictionary<string, object> properties = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task SendMessageAsync(string queueOrTopicName, ServiceBusMessage message, CancellationToken cancellationToken = default)
+        {
+            await using var sender = _client.CreateSender(queueOrTopicName);
+            await sender.SendMessageAsync(message, cancellationToken);
+
+            _logger.LogDebug("ServiceBusMessage sent to {Destination} with ID {MessageId}",
+                queueOrTopicName, message.MessageId);
         }
     }
 }

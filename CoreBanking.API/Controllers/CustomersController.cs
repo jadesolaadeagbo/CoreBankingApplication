@@ -67,7 +67,7 @@ namespace CoreBanking.API.Controllers
                 ApiResponse<CustomerId>.CreateSuccess(result.Data!));
         }
 
-        [HttpPost]
+        [HttpPost("enhanced")]
         public async Task<IActionResult> EnhancedCreateCustomer([FromBody] CreateCustomerRequest request)
         {
             _logger.LogInformation("Received customer creation request for {Email}", request.Email);

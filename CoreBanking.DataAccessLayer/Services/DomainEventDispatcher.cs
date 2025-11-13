@@ -2,11 +2,10 @@
 using CoreBanking.Core.Common;
 using CoreBanking.Core.Interfaces;
 using CoreBanking.DataAccessLayer.Data;
-using CoreBanking.Infrastructure.Data;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CoreBanking.Infrastructure.Services
+namespace CoreBanking.DataAccessLayer.Services
 {
     public class DomainEventDispatcher : IDomainEventDispatcher
     {
